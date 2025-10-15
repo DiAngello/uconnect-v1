@@ -7,12 +7,14 @@ import listPlugin from "@fullcalendar/list";
 import ptBr from "@fullcalendar/core/locales/pt-br";
 import { Tooltip, Modal } from "bootstrap";
 
+
 import Navbar from "./navBar";
 import MenuLateral from "./MenuLateral"; // ✅ Novo componente lateral
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+
 import "../styles/calendario.css";
 
 const API_URL = "http://localhost:8000";
@@ -33,6 +35,14 @@ const formatarDataBR = (dataString) => {
 
 function Calendario() {
   const HOJE = dataLocalYYYYMMDD();
+  
+  const mostrarModalSessaoExpirada = () => {
+    const el = document.getElementById("modalSessaoExpirada");
+    if (el) {
+      const modal = new Modal(el, { backdrop: "static", keyboard: false });
+      modal.show();
+    }
+  };
 
   const [eventos, setEventos] = useState([]);
   const [agenda, setAgenda] = useState([]);
@@ -85,6 +95,32 @@ function Calendario() {
     };
     fetchEventos();
   }, []);
+
+  useEffect(() => {
+  const verificarToken = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      mostrarModalSessaoExpirada();
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const exp = payload.exp * 1000;
+      if (Date.now() >= exp) {
+        localStorage.removeItem("accessToken");
+        mostrarModalSessaoExpirada();
+      }
+    } catch {
+      mostrarModalSessaoExpirada();
+    }
+  };
+
+  verificarToken();
+  const interval = setInterval(verificarToken, 30000);
+  return () => clearInterval(interval);
+}, []);
+
 
   // Limpa formulário
   const resetarFormulario = () => {
@@ -438,6 +474,35 @@ function Calendario() {
                     data-bs-dismiss="modal"
                   >
                     {modoEdicao ? "Salvar Alterações" : "Adicionar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          {/* Modal Sessão Expirada */}
+          <div
+            className="modal fade"
+            id="modalSessaoExpirada"
+            tabIndex="-1"
+            aria-labelledby="modalSessaoExpiradaLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content text-center p-3">
+                <div className="modal-body">
+                  <h5 className="mb-3 text-danger fw-bold">
+                    Sessão Expirada
+                  </h5>
+                  <p>Faça login novamente para continuar.</p>
+                  <button
+                    className="btn btn-primary mt-2"
+                    onClick={() => {
+                      localStorage.removeItem("accessToken");
+                      window.location.href = "/login";
+                    }}
+                  >
+                    Ir para login
                   </button>
                 </div>
               </div>
