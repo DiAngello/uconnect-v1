@@ -67,8 +67,8 @@ function Navbar() {
 
       {/* 🔹 Direita: Usuário, botão e notificação */}
       <div className="navbar-right">
-        {/* Botão do curso: navega para o calendário */}
-        <Link to="/calendario" className="course-btn" title="Ir para Calendário">
+        {/* Botão do curso:  */}
+        <Link to="" className="course-btn" title="Ir para Calendário">
           Análise e Desenvolvimento de Sistemas
         </Link>
 
