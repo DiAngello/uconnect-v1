@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/menulateral.css";
 
-// 🔹 importe seus SVGs (mantive todos exatamente como estavam)
+// Ícones
 import iconLista from "../assets/Lista.svg";
 import iconComunicados from "../assets/Comunicados.svg";
 import iconCalendario from "../assets/Calendario.svg";
@@ -10,27 +10,35 @@ import iconChat from "../assets/Chat.svg";
 import iconFeed from "../assets/Feed.svg";
 
 function SideMenu() {
-  const [active, setActive] = useState("calendar");
-  const navigate = useNavigate(); // ✅ hook para navegação SPA
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Descobre qual item deve estar ativo com base na URL atual
+  const getActiveFromPath = () => {
+    if (location.pathname.startsWith("/calendario")) return "calendario";
+    if (location.pathname.startsWith("/comunicados")) return "comunicados";
+    if (location.pathname.startsWith("/chat")) return "chat";
+    if (location.pathname.startsWith("/feed")) return "feed";
+    return "dashboard";
+  };
+
+  const activeId = getActiveFromPath();
 
   const menuItems = [
-    { id: "dashboard", icon: iconLista },
-    { id: "feed", icon: iconFeed },
-    { id: "calendario", icon: iconCalendario },
-    { id: "comunicados", icon: iconComunicados },
-    { id: "chat", icon: iconChat },
+    { id: "dashboard", icon: iconLista, label: "Dashboard" },
+    { id: "feed", icon: iconFeed, label: "Feed" },
+    { id: "calendario", icon: iconCalendario, label: "Calendário" },
+    { id: "comunicados", icon: iconComunicados, label: "Comunicados" },
+    { id: "chat", icon: iconChat, label: "Chat" },
   ];
 
-
-  //Navegação do menu lateral
   const handleClick = (id) => {
-    setActive(id);
-    if (id === "chat") {
-      navigate("/chat"); 
-    }
-    if (id === "comunicados") {
-      navigate("/comunicados"); 
-    }
+    if (id === "chat") navigate("/chat");
+    if (id === "comunicados") navigate("/comunicados");
+    if (id === "calendario") navigate("/calendario");
+    // Quando tiver rotas para esses:
+    // if (id === "dashboard") navigate("/dashboard");
+    // if (id === "feed") navigate("/feed");
   };
 
   return (
@@ -39,10 +47,15 @@ function SideMenu() {
         {menuItems.map((item) => (
           <li
             key={item.id}
-            className={`menu-item ${active === item.id ? "active" : ""}`}
+            className={`menu-item ${activeId === item.id ? "active" : ""}`}
             onClick={() => handleClick(item.id)}
+            title={item.label}
           >
-            <img src={item.icon} alt={item.id} className="menu-icon" />
+            <img
+              src={item.icon}
+              alt={item.label}
+              className="menu-icon"
+            />
             <span className="menu-label">{item.label}</span>
           </li>
         ))}
