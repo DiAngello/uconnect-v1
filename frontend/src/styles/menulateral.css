@@ -1,30 +1,42 @@
+/* CONTAINER DA BARRA LATERAL */
 .side-menu {
-  width: 120px;
+  width: 80px;                     /* mais estreito, foco no ícone */
   background-color: #ffffff;
   border-right: 1px solid #eaeaea;
   height: 100vh;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 0.75rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
+  position: sticky;                /* acompanha o scroll */
+  top: 0;
+  z-index: 90;
+  overflow: visible;               /* importante para o label "sair" para a direita */
 }
 
+/* LISTA */
 .menu-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 }
 
+/* ITEM DO MENU */
 .menu-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 10px;
+  justify-content: center;         /* centraliza o ícone */
+  gap: 8px;
+  padding: 10px;
+  border-radius: 12px;
   color: #555;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  margin-bottom: 6px;
 }
 
 .menu-item:hover {
@@ -38,19 +50,44 @@
   font-weight: 600;
 }
 
+/* ÍCONE */
 .menu-icon {
-  width: 50px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
+/* LABEL – aparece como “bala” ao lado */
 .menu-label {
-  font-size: 15px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  background-color: #ffffff;
+  color: #343a40;
+  border-radius: 999px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  left: 72px;                      /* posição da tag à direita do menu */
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
+/* MOSTRA LABEL NO HOVER OU QUANDO ESTÁ ATIVO */
+.menu-item:hover .menu-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* SEÇÃO DE LOGOUT (SE QUISER USAR NO FUTURO) */
 .logout-section {
   border-top: 1px solid #eee;
   padding-top: 1rem;
+  margin-top: auto;
+  width: 100%;
 }
 
 .menu-item.logout {

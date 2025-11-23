@@ -118,13 +118,13 @@ function Chat() {
     if (conversaAtivaId) fetchMensagens();
   }, [conversaAtivaId, fetchMensagens]);
 
-  // Polling a cada 5s
+  /*/ Polling a cada 5s
   useEffect(() => {
     if (!conversaAtivaId) return;
     const id = setInterval(fetchMensagens, 5000);
     return () => clearInterval(id);
   }, [conversaAtivaId, fetchMensagens]);
-
+*/
   // Scroll sempre no fim
   useEffect(() => {
     if (chatBodyRef.current) {
@@ -502,9 +502,6 @@ function Chat() {
                 {conversaAtivaId && (
                   <div className="card-footer bg-light">
                     <div className="input-group align-items-center">
-                      <span className="input-group-text bg-transparent border-0 fs-4">
-                        <i className="bi bi-plus-circle"></i>
-                      </span>
                       <input
                         type="text"
                         className="form-control border-0"
@@ -514,9 +511,6 @@ function Chat() {
                         onKeyDown={handleKeyDown}
                         disabled={loading || sendingMsg}
                       />
-                      <span className="input-group-text bg-transparent border-0 fs-4">
-                        <i className="bi bi-mic"></i>
-                      </span>
                       <button
                         className="btn btn-enviar d-flex align-items-center justify-content-center"
                         onClick={enviarMensagem}
