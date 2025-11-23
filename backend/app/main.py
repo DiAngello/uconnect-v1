@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
-from .routers import auth, users, events, groups, publications, chat, notifications
+from .routers import auth, users, events, groups, publications, chat, notifications, access
 from .db import Base, engine
 
 Base.metadata.create_all(bind=engine)
@@ -39,6 +39,8 @@ app.include_router(groups.router)
 app.include_router(publications.router)
 app.include_router(chat.router)
 app.include_router(notifications.router)
+app.include_router(access.router)
+
 
 @app.get("/")
 def root():
