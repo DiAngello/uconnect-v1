@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./navBar";
 import MenuLateral from "./MenuLateral";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,9 +12,6 @@ import {
   getCurrentUser,
 } from "../services/api";
 
-// =============================================
-// FUNÇÃO PARA TRANSFORMAR URLs EM <a>
-// =============================================
 function linkifyText(text) {
   if (!text) return null;
 
@@ -35,28 +32,51 @@ function linkifyText(text) {
         </a>
       );
     }
-
     return <span key={index}>{part}</span>;
   });
 }
 
 function MuralComunicados() {
   const navigate = useNavigate();
+  const location = useLocation(); // Hook para pegar dados da navegação
   const [currentUser, setCurrentUser] = useState(null);
+  
+  // Inicia o estado da tab. Se vier da notificação, usa a tab recebida.
   const [tab, setTab] = useState(
     () => sessionStorage.getItem("muralTab") || "comunicados"
   );
+
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [deleting, setDeleting] = useState(false);
-
-  // controla qual item está com o menu de opções aberto
   const [openMenuId, setOpenMenuId] = useState(null);
-
-  // controla o item aberto no modal de detalhes
   const [viewItem, setViewItem] = useState(null);
+
+  // --- LÓGICA DE NOTIFICAÇÃO (Novo) ---
+  // 1. Muda a aba se a navegação pedir
+  useEffect(() => {
+    if (location.state?.targetTab) {
+      const target = location.state.targetTab;
+      setTab(target);
+      sessionStorage.setItem("muralTab", target);
+    }
+  }, [location.state]);
+
+  // 2. Abre o modal se houver um openId e os items estiverem carregados
+  useEffect(() => {
+    if (location.state?.openId && items.length > 0) {
+      // Encontra o item comparando o ID numérico
+      const itemToOpen = items.find((i) => i.id === location.state.openId);
+      if (itemToOpen) {
+        setViewItem(itemToOpen);
+        // Limpa o state para não reabrir ao dar F5
+        window.history.replaceState({}, document.title);
+      }
+    }
+  }, [items, location.state]);
+  // --- FIM LÓGICA DE NOTIFICAÇÃO ---
 
   useEffect(() => {
     const loadUser = async () => {
@@ -74,8 +94,7 @@ function MuralComunicados() {
     try {
       setLoading(true);
       setErr(null);
-      setItems([]);
-
+      
       let data;
       if (tab === "comunicados") {
         data = await getPosts();
@@ -163,7 +182,6 @@ function MuralComunicados() {
       <div className="d-flex">
         <MenuLateral />
 
-        {/* evita scroll horizontal da área principal */}
         <div
           className="container-fluid mt-4 flex-grow-1"
           style={{ overflowX: "hidden" }}
@@ -229,7 +247,7 @@ function MuralComunicados() {
                 </div>
               )}
 
-              {!err && loading && (
+              {!err && loading && items.length === 0 && (
                 <div className="text-center p-4">
                   <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Carregando…</span>
@@ -250,7 +268,6 @@ function MuralComunicados() {
                 </div>
               )}
 
-              {/* LISTA DE PUBLICAÇÕES */}
               <div className="d-flex flex-column" style={{ maxWidth: "100%" }}>
                 {items.map((item) => (
                   <div
@@ -259,7 +276,6 @@ function MuralComunicados() {
                     style={{ maxWidth: "100%", position: "relative" }}
                   >
                     <div className="d-flex justify-content-between align-items-start">
-                      {/* COLUNA ESQUERDA – título + conteúdo */}
                       <div style={{ flexGrow: 1, minWidth: 0 }}>
                         <div className="fw-semibold text-dark">
                           {item.title || "(Sem título)"}
@@ -271,20 +287,26 @@ function MuralComunicados() {
                             style={{
                               whiteSpace: "pre-wrap",
                               wordBreak: "break-word",
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                              cursor: "pointer"
                             }}
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() => setViewItem(item)}
                           >
-                            {linkifyText(item.content)}
+                            {item.content}
                           </div>
                         )}
                       </div>
 
-                      {/* COLUNA DIREITA – data, ver detalhes e menu */}
                       <div className="text-muted small ps-3 d-flex align-items-center">
                         <div className="d-flex flex-column align-items-end me-2">
                           <span className="text-nowrap">
-                            {formatDateTime(item.date).split(" ")[1].substring(0, 5)}
-                            {"  "}
+                            {formatDateTime(item.date)
+                              .split(" ")[1]
+                              .substring(0, 5)}
+                            {" "}
                             {formatDateTime(item.date).split(" ")[0]}
                           </span>
                           <button
@@ -414,7 +436,7 @@ function MuralComunicados() {
         </>
       )}
 
-      {/* Modal de detalhes do comunicado/aviso */}
+      {/* Modal de detalhes */}
       {viewItem && (
         <>
           <div
@@ -438,12 +460,10 @@ function MuralComunicados() {
                 </div>
 
                 <div className="modal-body">
-                  {/* DATA */}
                   <div className="text-muted small">
                     Publicado em {formatDateTime(viewItem.date)}
                   </div>
 
-                  {/* AUTOR */}
                   <div className="text-muted small mb-3">
                     Publicado por{" "}
                     <span className="fw-semibold">
@@ -454,7 +474,6 @@ function MuralComunicados() {
                       : ""}
                   </div>
 
-                  {/* CONTEÚDO */}
                   <div
                     className="text-dark"
                     style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}

@@ -7,6 +7,8 @@ import MuralComunicados from './components/MuralComunicados';
 import CriarEditarPublicacao from './components/CriarEditarPublicacao';
 import Calendario from './components/calendario';
 import NotificationProvider from './components/NotificationProvider';
+import Notificacoes from './components/Notificacoes.jsx';
+
 
 // --- NOVO COMPONENTE IMPORTADO ---
 import CriarEditarAviso from './components/CriarEditarAviso';
@@ -40,30 +42,29 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
 
                     <Route element={<ProtectedRoute />}>
-                        <Route
-                            path="/*"
-                            element={
-                                <NotificationProvider>
-                                    <Routes>
-                                        <Route path="/chat" element={<ChatPage />} />
-                                        <Route path="/calendario" element={<Calendario />} />
-                                        
-                                        {/* Rotas de Comunicados (Posts) */}
-                                        <Route path="/comunicados" element={<MuralComunicados />} />
-                                        <Route path="/comunicados/novo" element={<CriarEditarPublicacao />} />
-                                        <Route path="/comunicados/editar/:postId" element={<CriarEditarPublicacao />} />
-                                        
-                                        {/* --- NOVAS ROTAS ADICIONADAS --- */}
-                                        <Route path="/avisos/novo" element={<CriarEditarAviso />} />
-                                        <Route path="/avisos/editar/:avisoId" element={<CriarEditarAviso />} />
-                                        {/* --- FIM DA ALTERAÇÃO --- */}
+    <Route
+        path="/*"
+        element={
+            <NotificationProvider>
+                <Routes>
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/calendario" element={<Calendario />} />
+                    
+                    {/* Rotas de Comunicados (Posts) */}
+                    <Route path="/comunicados" element={<MuralComunicados />} />
+                    <Route path="/comunicados/novo" element={<CriarEditarPublicacao />} />
+                    <Route path="/comunicados/editar/:postId" element={<CriarEditarPublicacao />} />
 
-                                        <Route path="/" element={<Navigate to="/calendario" replace />} />
-                                    </Routes>
-                                </NotificationProvider>
-                            }
-                        />
-                    </Route>
+                    <Route path="/avisos/novo" element={<CriarEditarAviso />} />
+                    <Route path="/avisos/editar/:avisoId" element={<CriarEditarAviso />} />
+                    <Route path="/notificacoes" element={<Notificacoes />} />
+
+                    <Route path="/" element={<Navigate to="/calendario" replace />} />
+                </Routes>
+            </NotificationProvider>
+        }
+    />
+</Route>
 
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </Routes>
