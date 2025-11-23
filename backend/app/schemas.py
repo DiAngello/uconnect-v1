@@ -162,3 +162,20 @@ class Chat(BaseModel):
 class ChatCreate(BaseModel):
     participant_ids: List[int]
     title: Optional[str] = None
+
+class AccessManagerBase(BaseModel):
+    userId: int
+    permission: str
+
+class AccessManagerCreate(AccessManagerBase):
+    pass
+
+class AccessManagerUpdate(BaseModel):
+    permission: str | None = None
+
+class AccessManagerResponse(AccessManagerBase):
+    id: int
+    createdAt: datetime
+
+    class Config:
+        orm_mode = True

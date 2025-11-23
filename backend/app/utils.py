@@ -135,3 +135,26 @@ def require_roles(allowed_roles: list[str]):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Permissão negada. Acesso restrito.")
         return current_user
     return role_checker
+
+def require_permission(permission: str):
+    """
+    Verificar se o usuário autenticado possui a permissão indicada.
+    """
+    def dependency(
+        current_user: models.User = Depends(get_current_active_user),
+        db: Session = Depends(get_db)
+    ):
+        has_permission = db.query(models.AccessManager).filter(
+            models.AccessManager.userId == current_user.id,
+            models.AccessManager.permission == permission
+        ).first()
+
+        if not has_permission:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Permissão '{permission}' negada"
+            )
+
+        return current_user
+
+    return dependency

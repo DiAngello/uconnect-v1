@@ -57,6 +57,14 @@ class User(Base):
         Index("ix_users_email", "email"),
     )
 
+class AccessManager(Base):
+    __tablename__ = "AccessManager"
+
+    id = Column(Integer, primary_key=True, index=True)
+    userId = Column(Integer, ForeignKey("User.id"), nullable=False)
+    permission = Column(String(255), nullable=False)
+    createdAt = Column(DateTime, default=datetime.utcnow)
+
 class Session(Base):
     __tablename__ = "Session"
     token = Column(String(500), primary_key=True, index=True, nullable=False)
