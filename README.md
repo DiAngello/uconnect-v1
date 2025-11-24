@@ -15,7 +15,7 @@ O objetivo é substituir a fragmentação causada pelo uso de ferramentas extern
 ---
 
 ## Arquitetura
-- Frontend: ...  
+- Frontend: React  
 - Backend: Python (FastAPI) + SQLAlchemy + Alembic.  
 - Banco de Dados: MySQL 8 (com suporte a replicação e particionamento).  
 - Comunicação em tempo real: WebSockets para chat e notificações.  
@@ -34,7 +34,7 @@ O objetivo é substituir a fragmentação causada pelo uso de ferramentas extern
 - Criação e gerenciamento de canais, subcanais e grupos acadêmicos.  
 - Envio e recebimento de mensagens em tempo real.  
 - Publicação de comunicados, avisos e eventos acadêmicos.  
-- Notificações instantâneas para os usuários.  
+- Notificações para os usuários.  
 
 ---
 
@@ -53,12 +53,13 @@ O objetivo é substituir a fragmentação causada pelo uso de ferramentas extern
 
 ---
 
-## Como Executar o Projeto
-...
-
 ### Pré-requisitos
-- [ ] Instalar Python (versão recomendada: X.X)  
-- [ ] Instalar Node.js (versão recomendada: X.X)  
-- [ ] Configurar variáveis de ambiente no arquivo `.env`  
+- Instalar Python 
+- Instalar Node.js
+- Instalar o NPM em um terminal 
+- Configurar variáveis de ambiente no arquivo `.env`  
 
+## Como Executar o Projeto
+- Abra dois terminais, um irá executar o setup.py e o outro NPM start.
 ---
+
