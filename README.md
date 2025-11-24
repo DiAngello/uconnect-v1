@@ -45,14 +45,6 @@ O objetivo é substituir a fragmentação causada pelo uso de ferramentas extern
 
 ---
 
-## Status do Projeto
-### Em fase inicial de desenvolvimento (MVP).  
->Estruturação do backend (FastAPI + MySQL) completo e frontend (React + Bootstrap) em andamento.  
->Estabelecimento do banco de dados completo.
->Autenticação de usuários completo.
-
----
-
 ### Pré-requisitos
 - Instalar Python 
 - Instalar Node.js
@@ -62,4 +54,5 @@ O objetivo é substituir a fragmentação causada pelo uso de ferramentas extern
 ## Como Executar o Projeto
 - Abra dois terminais, um irá executar o setup.py e o outro NPM start.
 ---
+
 
