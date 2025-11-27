@@ -82,7 +82,7 @@ class Event(Base):
     eventDate = Column(Date, nullable=False)
     startTime = Column(Time, nullable=True)
     endTime = Column(Time, nullable=True)
-    academicGroupId = Column(String(50), nullable=True)
+    academicGroupId = Column(Integer, ForeignKey("AcademicGroup.id", ondelete="SET NULL"),nullable=True)
     creatorId = Column(Integer, ForeignKey("User.id", ondelete="SET NULL"), nullable=True)
     creator = relationship("User", back_populates="events_created")
     

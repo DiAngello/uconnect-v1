@@ -48,7 +48,7 @@ class EventBase(BaseModel):
     eventDate: date
     startTime: Optional[time] = None
     endTime: Optional[time] = None
-    academicGroupId: Optional[str] = None
+    academicGroupId: Optional[int] = None
 
 class EventCreate(BaseModel):
     title: str
@@ -56,7 +56,7 @@ class EventCreate(BaseModel):
     hora: Optional[str] = None
     description: Optional[str] = None
     local: Optional[str] = None
-    academicGroupId: Optional[str] = None
+    academicGroupId: Optional[int] = None
 
 class EventUpdate(BaseModel):
     title: Optional[str] = None
@@ -64,7 +64,7 @@ class EventUpdate(BaseModel):
     eventDate: Optional[date] = None
     startTime: Optional[time] = None
     endTime: Optional[time] = None
-    academicGroupId: Optional[str] = None
+    academicGroupId: Optional[int] = None
 
 class EventResponse(BaseModel):
     id: int
@@ -74,7 +74,7 @@ class EventResponse(BaseModel):
     eventDate: date
     startTime: Optional[str] = None
     endTime: Optional[str] = None
-    academicGroupId: Optional[str] = None
+    academicGroupId: Optional[int] = None
     creatorId: Optional[int] = None
     model_config = ConfigDict(from_attributes=True)
 
